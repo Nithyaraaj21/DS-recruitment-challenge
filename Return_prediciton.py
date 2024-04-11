@@ -6,7 +6,7 @@ import pickle
 
 # Load the dataset
 # Specify the compressed file name
-compressed_file_name = "./youconverted_dataset.csv.gz"
+compressed_file_name = "./converted_dataset.csv.gz"
 
 # Read the compressed CSV file directly with pd.read_csv
 data = pd.read_csv(compressed_file_name, compression='gzip')

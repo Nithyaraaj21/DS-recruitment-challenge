@@ -13,7 +13,7 @@ model = model_data['model']
 ordinal_encoder = model_data['ordinal_encoder']
 
 # Load the dataset
-compressed_file_name = "youconverted_dataset.csv.gz"
+compressed_file_name = "converted_dataset.csv.gz"
 with gzip.open(compressed_file_name, "rb") as f:
     # Read the compressed file as bytes
     compressed_bytes = f.read()
