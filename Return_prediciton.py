@@ -1,19 +1,15 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from category_encoders import OrdinalEncoder
 import pickle
-import gzip
 
 # Load the dataset
 # Specify the compressed file name
-compressed_file_name = "youconverted_dataset.csv.gz"
+compressed_file_name = "./youconverted_dataset.csv.gz"
 
-# Save the DataFrame to a compressed CSV file
-with gzip.open(compressed_file_name, "wt", compresslevel=9) as f:
-    data = pd.read_csv(f)
-
+# Read the compressed CSV file directly with pd.read_csv
+data = pd.read_csv(compressed_file_name, compression='gzip')
 
 # Prepare data for predictive modeling
 X = data.drop(columns=["Returned", "SaleDocumentNumber", "CustomerID"])
@@ -26,7 +22,7 @@ ordinal_encoder = OrdinalEncoder()
 X_train_encoded = ordinal_encoder.fit_transform(X_train[categorical_columns])
 X_test_encoded = ordinal_encoder.transform(X_test[categorical_columns])
 
-# Train the model (example: Random Forest)
+# Train the model (example: Decision Tree Classifier)
 model = DecisionTreeClassifier(random_state=42)
 model.fit(X_train_encoded, y_train)
 
