@@ -17,7 +17,7 @@ y = data['Returned']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Preprocess categorical features using Ordinal Encoder
-categorical_columns = ['BrandName', 'ModelGroup', 'ProductGroup']
+categorical_columns = ['BrandName', 'ModelGroup', 'ProductGroup', 'Shop']
 ordinal_encoder = OrdinalEncoder()
 X_train_encoded = ordinal_encoder.fit_transform(X_train[categorical_columns])
 X_test_encoded = ordinal_encoder.transform(X_test[categorical_columns])
