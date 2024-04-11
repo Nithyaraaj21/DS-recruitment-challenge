@@ -39,7 +39,7 @@ def main():
     st.header('Enter Customer Data')
 
     # Create dropdown menus for the specified columns
-    columns_to_select = ['BrandName', 'ModelGroup', 'ProductGroup']
+    columns_to_select = ['Shop','BrandName', 'ModelGroup', 'ProductGroup']
     selected_values = []
     for column in columns_to_select:
         # Use unique values in the column as options for the dropdown menu
