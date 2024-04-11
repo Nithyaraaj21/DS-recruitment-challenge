@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import pickle
 import gzip
-import io
 
 # Load the pickled model and preprocessing steps
 with open('model_data.pkl', 'rb') as file:
@@ -14,13 +13,8 @@ ordinal_encoder = model_data['ordinal_encoder']
 
 # Load the dataset
 compressed_file_name = "youconverted_dataset.csv.gz"
-with gzip.open(compressed_file_name, "rb") as f:
-    # Read the compressed file as bytes
-    compressed_bytes = f.read()
-    # Convert the bytes to a file-like object
-    compressed_file_object = io.BytesIO(compressed_bytes)
-    # Read the CSV data from the file-like object
-    data = pd.read_csv(compressed_file_object)
+with gzip.open(compressed_file_name, "rt", compresslevel=9) as f:
+    data = pd.read_csv(f)
 
 # Define a function to preprocess input data and make predictions
 def predict_return(data):
@@ -38,10 +32,9 @@ def main():
     # Input form for user to enter data
     st.header('Enter Customer Data')
 
-    # Create dropdown menus for the specified columns
-    columns_to_select = ['Shop','BrandName', 'ModelGroup', 'ProductGroup']
+    # Create dropdown menus for all columns in the dataset
     selected_values = []
-    for column in columns_to_select:
+    for column in data.columns:
         # Use unique values in the column as options for the dropdown menu
         options = data[column].unique()
         # Add a dropdown menu for the current column
@@ -51,7 +44,7 @@ def main():
     # Button to make predictions
     if st.button('Predict'):
         # Convert selected values to DataFrame
-        input_data = {column: [selected_value] for column, selected_value in zip(columns_to_select, selected_values)}
+        input_data = {column: [selected_value] for column, selected_value in zip(data.columns, selected_values)}
         input_df = pd.DataFrame(input_data)
 
         # Preprocess input data and make predictions
