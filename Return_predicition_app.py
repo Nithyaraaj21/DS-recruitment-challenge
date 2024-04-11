@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import gzip
 
 # Load the pickled model and preprocessing steps
 with open('model_data.pkl', 'rb') as file:
@@ -11,7 +12,13 @@ model = model_data['model']
 ordinal_encoder = model_data['ordinal_encoder']
 
 # Load the dataset
-data = pd.read_csv("converted_dataset.csv")
+# Load the dataset
+# Specify the compressed file name
+compressed_file_name = "youconverted_dataset.csv.gz"
+
+# Save the DataFrame to a compressed CSV file
+with gzip.open(compressed_file_name, "wt", compresslevel=9) as f:
+    data = pd.read_csv(f)
 
 # Define a function to preprocess input data and make predictions
 def predict_return(data):
