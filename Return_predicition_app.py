@@ -66,10 +66,10 @@ def main():
         predictions = predict_return(input_df)
 
 # Display prediction result
-if predictions[0] == 1:
-    st.write('The product is likely to be returned.')
+if predictions[0] == 0:
+    st.write('The product is accepted by the customer- No Return.')
 else:
-    st.write('The product is accepted by the customer.')
+    st.write('The product is likely to be returned.')
 
 if __name__ == '__main__':
     main()
