@@ -11,7 +11,9 @@
 8. [Cloning Instructions](#cloning-instructions)
 
 ## Introduction
-Welcome to the Retailer Product Return Prediction project! In this project, we aim to tackle the challenge of predicting product returns for a retailer who sells shoes across multiple shops, both online and offline.
+Welcome to the Retailer Product Return Prediction project! In this project, the aim is to tackle the challenge of predicting product returns for a retailer who sells products across multiple shops, both online and offline. 
+
+The Main repository contains file required to run the app and the Branch contains the rest of the models and analysis part.
 
 ## Project Overview
 Project is structured into three main phases:
@@ -55,10 +57,10 @@ In addition to traditional machine learning models, we also explored the use of 
 The ANN model achieved an accuracy of 88.01%, with precision, recall, and F1-score of 89.79%, 85.79%, and 87.74% respectively. The confusion matrix illustrates the distribution of true positive, true negative, false positive, and false negative predictions.
 
 ## Model Deployment
-The Random Forest model is deployed using Streamlit, allowing stakeholders to input new data and obtain predictions on product returns in real-time. The Streamlit app can be accessed [here](link-to-streamlit-app).
+The Random Forest model is deployed using Streamlit, allowing stakeholders to input new data and obtain predictions on product returns in real-time. The Streamlit app can be accessed [here](https://predictthereturn.streamlit.app/).
 
 ## Conclusion
-In conclusion, our project successfully addressed the challenge of predicting product returns for the retailer. The deployed model provides valuable insights into return likelihood, enabling the retailer to take proactive measures to minimize returns and improve customer satisfaction.
+In conclusion, the project successfully addressed the challenge of predicting product returns for the retailer. The deployed model provides valuable insights into return likelihood, enabling the retailer to take proactive measures to minimize returns and improve customer satisfaction.
 
 ## References
 - Streamlit Documentation: [https://docs.streamlit.io/](https://docs.streamlit.io/)
