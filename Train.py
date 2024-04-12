@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from category_encoders import OrdinalEncoder
 import pickle
 
@@ -14,13 +14,13 @@ y = data['Returned']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Preprocess categorical features using Ordinal Encoder
-categorical_columns = ['BrandName', 'ModelGroup', 'ProductGroup']
+categorical_columns = ['Shop','BrandName', 'ModelGroup', 'ProductGroup']
 ordinal_encoder = OrdinalEncoder()
 X_train_encoded = ordinal_encoder.fit_transform(X_train[categorical_columns])
 X_test_encoded = ordinal_encoder.transform(X_test[categorical_columns])
 
 # Train the model (example: Random Forest Classifier)
-model = RandomForestClassifier(random_state=42)
+model = DecisionTreeClassifier(random_state=42)
 model.fit(X_train_encoded, y_train)
 
 # Serialize the trained model and ordinal encoder
@@ -30,11 +30,11 @@ model_data = {
 }
 
 # Save the serialized objects to a pickle file
-with open('model_data_rf.pkl', 'wb') as file:
+with open('model_data_dt.pkl', 'wb') as file:
     pickle.dump(model_data, file)
 
 # Load the trained model and ordinal encoder from the pickle file
-with open('model_data_rf.pkl', 'rb') as file:
+with open('model_data_dt.pkl', 'rb') as file:
     model_data = pickle.load(file)
 
 # Extract the model and ordinal encoder from the loaded data

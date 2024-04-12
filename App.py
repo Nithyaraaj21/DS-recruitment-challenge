@@ -6,7 +6,7 @@ import io
 import numpy as np  # Import NumPy for array manipulation
 
 # Load the pickled model and preprocessing steps
-with open('model_data.pkl', 'rb') as file:
+with open('model_data_rf.pkl', 'rb') as file:
     model_data = pickle.load(file)
 
 # Extract the model and ordinal encoder from the loaded data
