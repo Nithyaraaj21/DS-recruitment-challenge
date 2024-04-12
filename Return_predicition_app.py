@@ -67,7 +67,7 @@ def main():
 
         # Display prediction result
         if predictions[0] == 0:
-            st.write('The product is accepted by the customer - No return.')
+            st.write('The product will be accepted by the customer - No return.')
         else:
             st.write('The product is likely to be returned.')
 
