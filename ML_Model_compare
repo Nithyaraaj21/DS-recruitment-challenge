@@ -1,0 +1,114 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_auc_score, roc_curve, precision_recall_curve
+from category_encoders import OrdinalEncoder
+from imblearn.over_sampling import SMOTE
+import time
+import matplotlib.pyplot as plt
+
+# Load the modified dataset
+data = pd.read_csv("converted_dataset.csv")
+
+# Prepare data for predictive modeling
+X = data[['Shop','OriginalSaleAmountInclVAT','BrandName', 'ModelGroup', 'ProductGroup']]
+y = data['Returned']
+
+# Encode categorical variables
+ordinal_encoder = OrdinalEncoder()
+X_encoded = ordinal_encoder.fit_transform(X)
+
+# Apply SMOTE to balance the class distribution
+smote = SMOTE(random_state=42)
+X_resampled, y_resampled = smote.fit_resample(X_encoded, y)
+
+# Split the resampled data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=42)
+
+# Define models
+models = {
+    'NaiveBayes': GaussianNB(),
+    'DecisionTree': DecisionTreeClassifier(random_state=42),
+    'RandomForest': RandomForestClassifier(random_state=42),
+    'LogisticModel' : LogisticRegression(random_state=42)
+}
+
+# Dictionary to store evaluation metrics and times
+results = {'Model': [], 'Accuracy': [], 'Precision': [], 'Recall': [], 'F1-score': [], 'ROC AUC': [], 'Time': []}
+
+# Iterate over models
+for model_name, model in models.items():
+    start_time = time.time()
+    # Train model
+    model.fit(X_train, y_train)
+    # Predict
+    y_pred = model.predict(X_test)
+    # Predict probabilities
+    if hasattr(model, 'predict_proba'):
+        y_proba = model.predict_proba(X_test)[:, 1]
+    else:
+        y_proba = None
+    # Evaluate
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    confusion = confusion_matrix(y_test, y_pred)
+    roc_auc = roc_auc_score(y_test, y_proba) if y_proba is not None else None
+    end_time = time.time()
+    execution_time = end_time - start_time
+    # Save evaluation metrics and time
+    results['Model'].append(model_name)
+    results['Accuracy'].append(accuracy)
+    results['Precision'].append(precision)
+    results['Recall'].append(recall)
+    results['F1-score'].append(f1)
+    results['ROC AUC'].append(roc_auc)
+    results['Time'].append(execution_time)
+
+        # Plot Confusion Matrix
+    plt.figure()
+    plt.imshow(confusion, cmap='Blues', interpolation='nearest')
+    plt.title('Confusion Matrix - ' + model_name)
+    plt.colorbar()
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.xticks([0, 1], ['Not Returned', 'Returned'])
+    plt.yticks([0, 1], ['Not Returned', 'Returned'])
+    for i in range(len(confusion)):
+        for j in range(len(confusion)):
+            plt.text(j, i, confusion[i, j], ha='center', va='center', color='white' if confusion[i, j] > confusion.max() / 2 else 'black')
+    plt.savefig(f'confusion_matrix_{model_name}.png')  # Save confusion matrix plot
+    plt.close()  # Close the plot to avoid overlapping plots
+
+    # Plot ROC Curve
+    if y_proba is not None:
+        fpr, tpr, _ = roc_curve(y_test, y_proba)
+        plt.figure()
+        plt.plot(fpr, tpr, label='ROC curve')
+        plt.plot([0, 1], [0, 1], linestyle='--', color='red')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('ROC Curve - ' + model_name)
+        plt.savefig(f'roc_curve_{model_name}.png')  # Save ROC curve plot
+        plt.close()  # Close the plot to avoid overlapping plots
+
+    # Plot Lift Curve
+    if y_proba is not None:
+        precision, recall, _ = precision_recall_curve(y_test, y_proba)
+        plt.figure()
+        plt.plot(recall, precision, label='Lift curve')
+        plt.xlabel('Recall')
+        plt.ylabel('Precision')
+        plt.title('Lift Curve - ' + model_name)
+        plt.savefig(f'lift_curve_{model_name}.png')  # Save lift curve plot
+        plt.close()  # Close the plot to avoid overlapping plots
+
+# Convert results to DataFrame
+results_df = pd.DataFrame(results)
+
+# Export DataFrame to a CSV file
+results_df.to_csv('model_evaluation_report.csv', index=False)
