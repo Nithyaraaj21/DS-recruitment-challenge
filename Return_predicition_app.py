@@ -65,11 +65,11 @@ def main():
         # Preprocess input data and make predictions
         predictions = predict_return(input_df)
 
-        # Display prediction result
-        if predictions[0] == 0:
-            st.write('Product is not returned')
-        else:
-            st.write('Product is returned')
+# Display prediction result
+if predictions[0] == 1:
+    st.write('The product is likely to be returned.')
+else:
+    st.write('The product is accepted by the customer.')
 
 if __name__ == '__main__':
     main()
